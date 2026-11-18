@@ -35,11 +35,11 @@ def read_rows(text, fields):
                 blanks += 1
                 continue
             if cells == header:
-                rejected.append({"line":line,"reason":"REPEATED_HEADER","raw":cells})
+                rejected.append({"line":line,"src":f"L{line}","reason":"REPEATED_HEADER","raw":cells})
             elif len(cells) != len(header):
-                rejected.append({"line":line,"reason":"COLUMN_COUNT","raw":cells})
+                rejected.append({"line":line,"src":f"L{line}","reason":"COLUMN_COUNT","raw":cells})
             else:
-                accepted.append(dict(zip(header, [x.strip() for x in cells]), line=line))
+                accepted.append(dict(zip(header, [x.strip() for x in cells]), line=line, src=f"L{line}"))
     except csv.Error:
         raise BusinessError("CSV", "引号或换行结构错误")
     if not accepted and not rejected and not blanks:

@@ -30,6 +30,8 @@ docker compose config --quiet
 
 CSV可用UTF-8或GB18030；上传保留字符串编号和物理行号。POST `/api/run` 接收 `text` 字段。`GET /api/runs` 查询历史，`POST /api/review` 接收 id、revision、decision。导出按钮下载唯一证据CSV，含运行摘要与隔离记录。
 
+个别行格式错误待补时使用 `POST /api/amend`：把补交行并入原批次，不新增批次、不整批重传。复核页的「补交更正」区与证据导出逐行标明更正状态——**已生效**（进入现行待复核结果）或**停在原结论**（该样品已复核，原结论与被替换行依据保留）。同一份补交重试不新增版本；合并失败时旧版结果原样保留。
+
 SQLite命名卷保存运行记录。重建演示数据可更换卷名后重启。无需外部网络数据。规则定义见 `docs/DATA-DICTIONARY.md`；边界和测试对应关系见 `docs/DEPTH.md`。
 
 ## 范围

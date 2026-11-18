@@ -27,10 +27,13 @@
 | TRAP-14 | 业务键冲突 | 静默采信错误值 | 保留首条并隔离冲突 | `app/modules/m1_intake/rules.py` | `tests/test_intake.py::test_intake_conflicting_key` |
 | TRAP-15 | 单位混合 | 静默采信错误值 | 浓度单位归一 | `app/modules/m2_internal/rules.py` | `tests/test_internal.py::test_internal_units` |
 | TRAP-19 | 多个质控标记 | 静默采信错误值 | 显式优先级 | `app/modules/m6_quality/rules.py` | `tests/test_quality.py::test_quality_priority` |
+| TRAP-20 | 个别行补交 | 整批重传冲掉已采信数据 | 按业务键并入同批次并逐行标注更正状态 | `app/amend.py` | `tests/test_amend.py` |
+| TRAP-21 | 补交含已复核样品 | 复算悄悄改写原结论 | 已复核行沿用原结论，仅存证不改写 | `app/amend.py` | `tests/test_amend.py::test_reviewed_row_keeps_original_conclusion` |
+| TRAP-22 | 同一补交重试 | 重复合并、新增版本 | 以补交摘要幂等，重放只返回原记录 | `app/store.py` | `tests/test_amend.py::test_supplement_retry_is_idempotent` |
 
 ## 对账规则
 
-输入记录=采信记录+隔离记录+空行；重复记录归隔离；算法输出另记业务单位，不冒充输入行数。金额/浓度/时长使用Decimal；证据含原始行号。
+输入记录=采信记录+隔离记录+空行；重复记录归隔离；算法输出另记业务单位，不冒充输入行数。金额/浓度/时长使用Decimal；证据含原始行号。补交并入后按同一口径重算对账，补交行单独标注来源（`补交摘要::原行号`）。
 
 ## 已知不覆盖
 

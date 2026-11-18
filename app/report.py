@@ -14,7 +14,10 @@ def report(rows, **metrics):
     return {"rows":plain(rows), "metrics":plain(metrics)}
 
 def quarantine(ctx, row, reason):
-    ctx["quarantine"].append({"line":row.get("line",0),"id":row.get("id",row.get("sample_id","")),"reason":reason,"raw":plain(row)})
+    entry={"line":row.get("line",0),"id":row.get("id",row.get("sample_id","")),"reason":reason,"raw":plain(row)}
+    # 每条输入行有稳定来源标识，合并补交后仍可区分原件行与补交行
+    if row.get("src"): entry["src"]=row["src"]
+    ctx["quarantine"].append(entry)
 
 def reason_counts(ctx):
     return dict(Counter(x["reason"] for x in ctx["quarantine"]))
